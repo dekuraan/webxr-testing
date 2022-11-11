@@ -68,7 +68,6 @@ pub async fn start() -> Result<(), JsValue> {
     session.update_render_state_with_state(&state);
 
     //Draw
-
     type XrFrameHandler = Closure<dyn FnMut(f64, XrFrame)>;
     let session = Rc::new(RefCell::new(session));
     let f: Rc<RefCell<Option<XrFrameHandler>>> = Rc::new(RefCell::new(None));
