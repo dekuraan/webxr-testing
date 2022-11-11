@@ -44,7 +44,6 @@ pub async fn start() -> Result<(), JsValue> {
 
     let gl_attribs = Object::new();
 
-    // satisfying rust-analyzer proc macro
     Reflect::set(
         &gl_attribs,
         &JsValue::from_str("xrCompatible"),
