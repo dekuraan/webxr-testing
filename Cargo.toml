@@ -13,7 +13,7 @@ features = ["webxr"]
 wasm-bindgen-futures = "0.4.33"
 console_error_panic_hook = "0.1.7"
 gloo-console = "0.2.3"
-wgpu = {version = "0.13.1", features =["webgl"]}
+wgpu = {version = "0.14.0", features =["webgl"]}
 web-sys = { version = "0.3", features = [
     "WebGl2RenderingContext",
     "HtmlCanvasElement",
@@ -52,3 +52,7 @@ web-sys = { version = "0.3", features = [
     "XrWebGlLayer",
     "XrWebGlLayerInit",
 ] }
+
+[patch.crates-io]
+wgpu = { git = "https://github.com/expenses/wgpu", rev = "d1a9ad7801022d2b733746e9d13152ce2705519b" }
+wgpu-hal = { git = "https://github.com/expenses/wgpu", rev = "d1a9ad7801022d2b733746e9d13152ce2705519b" }
