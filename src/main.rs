@@ -4,7 +4,14 @@ use std::sync::Arc;
 use bevy::{
     prelude::*,
     render::renderer::{RenderAdapterInfo, RenderDevice, RenderQueue},
-    webxr::{Canvas, WebXrContext},
+    render::{
+        camera::RenderTarget,
+        render_resource::{
+            Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
+        },
+        view::RenderLayers,
+    },
+    webxr::{Canvas, FramebufferUuids, WebXrContext},
 };
 use gloo_console as console;
 use wasm_bindgen_futures::spawn_local;
@@ -87,7 +94,8 @@ pub async fn start() {
     app.world.insert_resource(RenderAdapterInfo(adapter_info));
     app.world.insert_non_send_resource(webxr_context);
     app.add_plugins(DefaultPlugins);
-    app.add_system(running_test);
+    // app.add_system(running_test);
+    app.add_startup_system(setup);
     console::log!("pre run");
     app.run();
 }
@@ -98,43 +106,23 @@ fn setup(
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut images: ResMut<Assets<Image>>,
 ) {
-    commands.spawn((
-        Camera3dBundle {
-            camera_3d: Camera3d {
-                clear_color: ClearColorConfig::Custom(Color::BLUE),
-                ..default()
-            },
-            camera: Camera {
-                target: RenderTarget::Image(image_handle.clone()),
-                ..default()
-            },
-            transform: Transform::from_translation(Vec3::new(0.0, 0.0, 15.0))
-                .looking_at(Vec3::ZERO, Vec3::Y),
-            ..default()
-        },
-        first_pass_layer,
-    ));
+    commands.insert_resource(AmbientLight {
+        color: Color::WHITE,
+        brightness: 1.0,
+    });
+
     let cube_size = 4.0;
     let cube_handle = meshes.add(Mesh::from(shape::Box::new(cube_size, cube_size, cube_size)));
-
-    // This material has the texture that has been rendered.
-    let material_handle = materials.add(StandardMaterial {
-        base_color_texture: Some(image_handle),
-        reflectance: 0.02,
-        unlit: false,
-        ..default()
-    });
 
     // Main pass cube, with material containing the rendered first pass texture.
     commands.spawn(PbrBundle {
         mesh: cube_handle,
-        material: material_handle,
         transform: Transform::from_xyz(0.0, 0.0, 1.5)
-            .with_rotation(Quat::from_rotation_x(-PI / 5.0)),
+            .with_rotation(Quat::from_rotation_x(-std::f32::consts::PI / 5.0)),
         ..default()
     });
 }
 
-fn running_test() {
+fn running_test(render_queue: Res<RenderQueue>) {
     bevy::log::info!("Hiii!!!!")
 }
