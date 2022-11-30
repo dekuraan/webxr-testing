@@ -6,7 +6,7 @@ get a WebXR Emulator browser extension
 
 [Chrome extension](https://chrome.google.com/webstore/detail/webxr-api-emulator/mjddjgeghkdijejnciaefnkjmkafnnje)
 ## Run
-`trunk serve`
+`trunk serve --release`
 
 go to localhost:8080
 
